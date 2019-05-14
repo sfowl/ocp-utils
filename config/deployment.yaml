@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ocp-utils
+  labels:
+    app: ocp-utils
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ocp-utils
+  template:
+    metadata:
+      labels:
+        app: ocp-utils
+    spec:
+      containers:
+      - image: quay.io/sfowl/ocp-utils:latest
+        imagePullPolicy: Always
+        name: ocp-utils
+        ports:
+        - containerPort: 10027
+          name: http
+          protocol: TCP

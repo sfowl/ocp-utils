@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    app: ocp-utils
+  name: ocp-utils
+spec:
+  selector:
+    matchLabels:
+      app: ocp-utils
+  template:
+    metadata:
+      labels:
+        app: ocp-utils
+    spec:
+      containers:
+      - image: quay.io/sfowl/ocp-utils:latest
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 10027
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: ocp-utils
+        ports:
+        - containerPort: 10027
+          name: http
+          protocol: TCP
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 5
+    type: RollingUpdate
